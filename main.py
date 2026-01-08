@@ -1,4 +1,4 @@
-from typing import Any, Sequence, Generator
+from typing import Sequence, Generator
 
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -8,6 +8,8 @@ import schemas
 import crud
 from database import SessionLocal, engine
 
+
+models.Base.metadata.create_all(bind=engine)
 app = FastAPI(title="Library Management API")
 
 
@@ -64,7 +66,7 @@ def create_book(
 
 @app.get("/books/", response_model=list[schemas.BookRead])
 def books_by_author(
-        author_id: int,
+        author_id: int | None = None,
         skip: int = 0,
         limit: int = 10,
         db: Session = Depends(get_db)
