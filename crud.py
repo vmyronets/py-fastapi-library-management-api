@@ -27,7 +27,6 @@ def create_author(
 
 
 def get_author_by_id(db: Session, author_id: int) -> models.Author | None:
-
     return db.scalar(
         select(models.Author)
         .where(models.Author.id == author_id)
@@ -55,7 +54,6 @@ def get_all_books(
         skip: int = 0,
         limit: int = 10
 ) -> Sequence[Any]:
-
     return db.scalars(
         select(models.Book)
         .offset(skip)
@@ -69,7 +67,6 @@ def get_books_by_author(
         skip: int = 0,
         limit: int = 10
 ) -> Sequence[Any]:
-
     return db.scalars(
         select(models.Book)
         .where(models.Book.author_id == author_id)

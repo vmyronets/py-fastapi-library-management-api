@@ -1,4 +1,4 @@
-from typing import Any, Sequence
+from typing import Any, Sequence, Generator
 
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -7,14 +7,11 @@ import models
 import schemas
 import crud
 from database import SessionLocal, engine
-from models import Author, Book
-
-models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Library Management API")
 
 
-def get_db():
+def get_db() -> Generator[Session, None, None]:
     db = SessionLocal()
     try:
         yield db
@@ -26,7 +23,7 @@ def get_db():
 def create_author(
         author: schemas.AuthorCreate,
         db: Session = Depends(get_db)
-) -> Author:
+) -> models.Author:
     return crud.create_author(db, author)
 
 
@@ -35,7 +32,7 @@ def list_authors(
         skip: int = 0,
         limit: int = 10,
         db: Session = Depends(get_db)
-) -> list[Author]:
+) -> list[models.Author]:
     return crud.get_all_authors(db, skip=skip, limit=limit)
 
 
@@ -43,7 +40,7 @@ def list_authors(
 def get_author(
         author_id: int,
         db: Session = Depends(get_db)
-) -> Author:
+) -> models.Author:
     author = crud.get_author_by_id(db, author_id)
     if not author:
         raise HTTPException(status_code=404, detail="Author not found")
@@ -55,7 +52,7 @@ def create_book(
         author_id: int,
         book: schemas.BookCreate,
         db: Session = Depends(get_db)
-) -> Book | None:
+) -> models.Book | None:
     if not crud.get_author_by_id(db, author_id):
         raise HTTPException(status_code=404, detail="Author not found")
     return crud.create_book(db, book, author_id)

@@ -21,7 +21,7 @@ class Book(Base):
     __tablename__ = "books"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    title: Mapped[str] = mapped_column(String, unique=True, index=True)
+    title: Mapped[str] = mapped_column(String, index=True)
     summary: Mapped[str | None]
     publication_date: Mapped[date]
     author_id: Mapped[int] = mapped_column(ForeignKey("authors.id"))
