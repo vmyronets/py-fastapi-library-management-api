@@ -7,7 +7,10 @@ import models
 import schemas
 
 
-def get_all_authors(db: Session, skip: int = 0, limit: int = 10):
+def get_all_authors(
+        db: Session, skip: int = 0, limit: int = 10
+) -> Sequence[models.Author]:
+
     return db.scalars(
         select(models.Author)
         .offset(skip)
@@ -53,7 +56,8 @@ def get_all_books(
         db: Session,
         skip: int = 0,
         limit: int = 10
-) -> Sequence[Any]:
+) -> Sequence[models.Book]:
+
     return db.scalars(
         select(models.Book)
         .offset(skip)
@@ -66,7 +70,8 @@ def get_books_by_author(
         author_id: int,
         skip: int = 0,
         limit: int = 10
-) -> Sequence[Any]:
+) -> Sequence[models.Book]:
+
     return db.scalars(
         select(models.Book)
         .where(models.Book.author_id == author_id)
